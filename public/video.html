@@ -1,0 +1,23 @@
+<!-- public/video.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Player</title>
+</head>
+<body>
+    <video id="videoPlayer" controls autoplay style="width: 100%;">
+        <source id="videoSource" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoUrl = urlParams.get('url');
+        if (videoUrl) {
+            document.getElementById('videoSource').src = videoUrl;
+            document.getElementById('videoPlayer').load();
+        }
+    </script>
+</body>
+</html>

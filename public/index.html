@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Browser</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1 { font-size: 24px; }
+        .input-section { margin-top: 20px; }
+        label { display: block; margin-top: 10px; }
+        button { margin-top: 10px; padding: 8px 12px; cursor: pointer; }
+        #progressContainer { margin-top: 20px; display: none; }
+        #progressBar { width: 100%; height: 20px; background-color: #f3f3f3; }
+        #progressBarFill { height: 100%; width: 0%; background-color: #4caf50; }
+    </style>
+</head>
+<body>
+
+<h1>Video Browser</h1>
+<p>Select a video to play from the list, enter a URL, or upload a file.</p>
+
+<!-- Video URL Input Section -->
+<div class="input-section">
+    <label for="videoUrl">Enter Video URL:</label>
+    <input type="text" id="videoUrl" placeholder="https://example.com/video.mp4" style="width: 100%;">
+    
+    <label for="videoFile">Or Upload a Video File:</label>
+    <input type="file" id="videoFile" accept="video/*">
+    
+    <button onclick="uploadVideo()">Upload & Play Video</button>
+</div>
+
+<!-- Progress Bar Section -->
+<div id="progressContainer">
+    <p>Uploading video...</p>
+    <div id="progressBar">
+        <div id="progressBarFill"></div>
+    </div>
+</div>
+
+<script>
+    // Function to handle video upload and play
+    function uploadVideo() {
+        const videoFile = document.getElementById('videoFile').files[0];
+
+        if (!videoFile) {
+            alert("Please select a video file to upload.");
+            return;
+        }
+
+        // Display the progress bar
+        document.getElementById('progressContainer').style.display = 'block';
+        const progressBarFill = document.getElementById('progressBarFill');
+        progressBarFill.style.width = '0%';
+
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append('video', videoFile);
+
+        // Set up the XMLHttpRequest to track upload progress
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload-video', true);
+
+        // Update the progress bar as the upload progresses
+        xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = (event.loaded / event.total) * 100;
+                progressBarFill.style.width = `${percentComplete}%`;
+            }
+        });
+
+        // Handle the upload completion
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const videoUrl = xhr.responseText;
+                window.location.href = `/play-video?url=${encodeURIComponent(videoUrl)}`;
+            } else {
+                alert('Error uploading video');
+            }
+            // Hide the progress bar after completion
+            document.getElementById('progressContainer').style.display = 'none';
+        };
+
+        // Send the file
+        xhr.send(formData);
+    }
+</script>
+
+</body>
+</html>
