@@ -1,14 +1,15 @@
 {
   "name": "video-player",
   "version": "1.0.0",
-  "description": "",
+  "description": "Just a pkayer to run vids on the go",
   "main": "server.js",
   "scripts": {
+    "setup": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Zee",
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.1",
